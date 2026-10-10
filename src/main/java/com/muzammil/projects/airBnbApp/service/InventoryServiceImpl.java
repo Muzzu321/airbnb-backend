@@ -67,6 +67,10 @@ public class InventoryServiceImpl implements InventoryService{
     @Override
     public Page<HotelPriceResponseDto> searchHotels(HotelSearchRequest hotelSearchRequest) {
         log.info("Searching hotels for {} city, from {} to {}", hotelSearchRequest.getCity(), hotelSearchRequest.getStartDate(), hotelSearchRequest.getEndDate());
+        if (hotelSearchRequest.getEndDate().isBefore(hotelSearchRequest.getStartDate())) {
+            throw new IllegalArgumentException("End date cannot be before start date");
+        }
+
         Pageable pageable = PageRequest.of(hotelSearchRequest.getPage(), hotelSearchRequest.getSize());
         long dateCount =
                 ChronoUnit.DAYS.between(hotelSearchRequest.getStartDate(), hotelSearchRequest.getEndDate()) + 1;
@@ -74,8 +78,7 @@ public class InventoryServiceImpl implements InventoryService{
         // business logic - 90 days
         Page<HotelPriceDto> hotelPage =
                 hotelMinPriceRepository.findHotelsWithAvailableInventory(hotelSearchRequest.getCity(),
-                hotelSearchRequest.getStartDate(), hotelSearchRequest.getEndDate(), hotelSearchRequest.getRoomsCount(),
-                dateCount, pageable);
+                hotelSearchRequest.getStartDate(), hotelSearchRequest.getEndDate(), pageable);
 
         return hotelPage.map(hotelPriceDto -> {
             HotelPriceResponseDto hotelPriceResponseDto = modelMapper.map(hotelPriceDto.getHotel(), HotelPriceResponseDto.class);

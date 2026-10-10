@@ -1,5 +1,6 @@
 package com.muzammil.projects.airBnbApp.controller;
 
+import jakarta.validation.Valid;
 import com.muzammil.projects.airBnbApp.dto.RoomDto;
 import com.muzammil.projects.airBnbApp.service.RoomService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +21,7 @@ public class RoomAdminController {
     @PostMapping
     @Operation(summary = "Create a new room in a hotel", tags = {"Admin Inventory"})
     public ResponseEntity<RoomDto> createNewRoom(@PathVariable Long hotelId,
-                                                 @RequestBody RoomDto roomDto) {
+                                                 @Valid @RequestBody RoomDto roomDto) {
         RoomDto room = roomService.createNewRoom(hotelId, roomDto);
         return new ResponseEntity<>(room, HttpStatus.CREATED);
     }
@@ -47,7 +48,7 @@ public class RoomAdminController {
     @PutMapping("/{roomId}")
     @Operation(summary = "Update a room", tags = {"Admin Inventory"})
     public ResponseEntity<RoomDto> updateRoomById(@PathVariable Long hotelId, @PathVariable Long roomId,
-                                                  @RequestBody RoomDto roomDto) {
+                                                  @Valid @RequestBody RoomDto roomDto) {
         return ResponseEntity.ok(roomService.updateRoomById(hotelId, roomId, roomDto));
     }
 

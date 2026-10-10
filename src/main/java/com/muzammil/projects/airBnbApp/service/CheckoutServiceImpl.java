@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +41,8 @@ public class CheckoutServiceImpl implements CheckoutService{
                     .setCustomer(customer.getId())
                     .setSuccessUrl(successUrl)
                     .setCancelUrl(failureUrl)
+                    // Stripe's minimum is 30 minutes. BookingExpiryService relies on this value.
+                    .setExpiresAt(Instant.now().plusSeconds(30 * 60).getEpochSecond())
                     .addLineItem(
                             SessionCreateParams.LineItem.builder()
                                     .setQuantity(1L)
@@ -68,7 +71,8 @@ public class CheckoutServiceImpl implements CheckoutService{
             return session.getUrl();
 
         } catch (StripeException e) {
-            throw new RuntimeException(e);
+            log.error("Stripe session creation failed for booking {}", booking.getId(), e);
+            throw new IllegalStateException("The payment session could not be created. Please try again later.");
         }
 
 

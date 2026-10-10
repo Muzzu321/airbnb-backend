@@ -17,7 +17,7 @@ public interface HotelMinPriceRepository extends JpaRepository<HotelMinPrice, Lo
     @Query("""
             SELECT new com.muzammil.projects.airBnbApp.dto.HotelPriceDto(i.hotel, AVG(i.price))
             FROM HotelMinPrice i
-            WHERE i.hotel.city = :city
+            WHERE LOWER(i.hotel.city) = LOWER(:city)
                 AND i.date BETWEEN :startDate AND :endDate
                 AND i.hotel.active = true
            GROUP BY i.hotel
@@ -26,10 +26,10 @@ public interface HotelMinPriceRepository extends JpaRepository<HotelMinPrice, Lo
             @Param("city") String city,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
-            @Param("roomsCount") Integer roomsCount,
-            @Param("dateCount") Long dateCount,
             Pageable pageable
     );
+
+    void deleteByHotel(Hotel hotel);
 
     Optional<HotelMinPrice> findByHotelAndDate(Hotel hotel, LocalDate date);
 }

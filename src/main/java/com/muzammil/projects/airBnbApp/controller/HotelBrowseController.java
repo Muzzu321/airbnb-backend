@@ -1,5 +1,7 @@
 package com.muzammil.projects.airBnbApp.controller;
 
+import org.springframework.web.bind.annotation.ModelAttribute;
+import jakarta.validation.Valid;
 import com.muzammil.projects.airBnbApp.dto.*;
 import com.muzammil.projects.airBnbApp.service.HotelService;
 import com.muzammil.projects.airBnbApp.service.InventoryService;
@@ -20,7 +22,7 @@ public class HotelBrowseController {
 
     @GetMapping("/search")
     @Operation(summary = "Search hotels", tags = {"Browse Hotels"})
-    public ResponseEntity<Page<HotelPriceResponseDto>> searchHotels(@RequestBody HotelSearchRequest hotelSearchRequest) {
+    public ResponseEntity<Page<HotelPriceResponseDto>> searchHotels(@Valid @ModelAttribute HotelSearchRequest hotelSearchRequest) {
 
         var page = inventoryService.searchHotels(hotelSearchRequest);
         return ResponseEntity.ok(page);
@@ -28,7 +30,7 @@ public class HotelBrowseController {
 
     @GetMapping("/{hotelId}/info")
     @Operation(summary = "Get a hotel info by hotelId", tags = {"Browse Hotels"})
-    public ResponseEntity<HotelInfoDto> getHotelInfo(@PathVariable Long hotelId, @RequestBody HotelInfoRequestDto hotelInfoRequestDto) {
+    public ResponseEntity<HotelInfoDto> getHotelInfo(@PathVariable Long hotelId, @Valid @ModelAttribute HotelInfoRequestDto hotelInfoRequestDto) {
         return ResponseEntity.ok(hotelService.getHotelInfoById(hotelId, hotelInfoRequestDto));
     }
 

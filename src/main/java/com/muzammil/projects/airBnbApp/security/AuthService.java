@@ -32,7 +32,7 @@ public class AuthService {
         User user = userRepository.findByEmail(signUpRequestDto.getEmail()).orElse(null);
 
         if (user != null) {
-            throw new RuntimeException("User is already present with same email id");
+            throw new IllegalStateException("User is already present with same email id");
         }
 
         User newUser = modelMapper.map(signUpRequestDto, User.class);

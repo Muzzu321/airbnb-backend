@@ -1,5 +1,6 @@
 package com.muzammil.projects.airBnbApp.controller;
 
+import jakarta.validation.Valid;
 import com.muzammil.projects.airBnbApp.dto.BookingDto;
 import com.muzammil.projects.airBnbApp.dto.GuestDto;
 import com.muzammil.projects.airBnbApp.dto.ProfileUpdateRequestDto;
@@ -53,13 +54,13 @@ public class UserController {
 
     @PostMapping("/guests")
     @Operation(summary = "Add a new guest to my guests list", tags = {"Booking Guests"})
-    public ResponseEntity<GuestDto> addNewGuest(@RequestBody GuestDto guestDto) {
+    public ResponseEntity<GuestDto> addNewGuest(@Valid @RequestBody GuestDto guestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(guestService.addNewGuest(guestDto));
     }
 
     @PutMapping("guests/{guestId}")
     @Operation(summary = "Update a guest", tags = {"Booking Guests"})
-    public ResponseEntity<Void> updateGuest(@PathVariable Long guestId, @RequestBody GuestDto guestDto) {
+    public ResponseEntity<Void> updateGuest(@PathVariable Long guestId, @Valid @RequestBody GuestDto guestDto) {
         guestService.updateGuest(guestId, guestDto);
         return ResponseEntity.noContent().build();
     }

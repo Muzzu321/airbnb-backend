@@ -6,6 +6,7 @@ import com.muzammil.projects.airBnbApp.entity.Room;
 import com.muzammil.projects.airBnbApp.entity.User;
 import com.muzammil.projects.airBnbApp.exception.ResourceNotFoundException;
 import com.muzammil.projects.airBnbApp.exception.UnAuthorisedException;
+import com.muzammil.projects.airBnbApp.repository.HotelMinPriceRepository;
 import com.muzammil.projects.airBnbApp.repository.HotelRepository;
 import com.muzammil.projects.airBnbApp.repository.InventoryRepository;
 import com.muzammil.projects.airBnbApp.repository.RoomRepository;
@@ -32,6 +33,8 @@ public class HotelServiceImpl implements HotelService{
     private final InventoryService inventoryService;
     private final RoomRepository roomRepository;
     private final InventoryRepository inventoryRepository;
+    private final HotelMinPriceRepository hotelMinPriceRepository;
+    private final PricingUpdateService pricingUpdateService;
 
     @Override
     public HotelDto createNewHotel(HotelDto hotelDto) {
@@ -97,6 +100,7 @@ public class HotelServiceImpl implements HotelService{
             inventoryService.deleteAllInventories(room);
             roomRepository.deleteById(room.getId());
         }
+        hotelMinPriceRepository.deleteByHotel(hotel);
         hotelRepository.deleteById(id);
     }
 
@@ -114,12 +118,19 @@ public class HotelServiceImpl implements HotelService{
             throw new UnAuthorisedException("This user does not own this hotel with id: "+hotelId);
         }
 
+        if (Boolean.TRUE.equals(hotel.getActive())) {
+            throw new IllegalStateException("Hotel is already active");
+        }
+
         hotel.setActive(true);
 
-        // assuming only do it once
+        // only done once, guarded by the check above (inventory rows are unique per hotel/room/date)
         for(Room room: hotel.getRooms()) {
             inventoryService.initializeRoomForAYear(room);
         }
+
+        // make the hotel searchable immediately instead of waiting for the hourly price job
+        pricingUpdateService.refreshHotelPrices(hotel);
     }
 
 //    public method
@@ -128,6 +139,10 @@ public class HotelServiceImpl implements HotelService{
         Hotel hotel = hotelRepository
                 .findById(hotelId)
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with ID: "+hotelId));
+
+        if (hotelInfoRequestDto.getEndDate().isBefore(hotelInfoRequestDto.getStartDate())) {
+            throw new IllegalArgumentException("End date cannot be before start date");
+        }
 
         long daysCount = ChronoUnit.DAYS.between(hotelInfoRequestDto.getStartDate(), hotelInfoRequestDto.getEndDate())+1;
 

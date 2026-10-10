@@ -1,5 +1,6 @@
 package com.muzammil.projects.airBnbApp.controller;
 
+import jakarta.validation.Valid;
 import com.muzammil.projects.airBnbApp.dto.InventoryDto;
 import com.muzammil.projects.airBnbApp.dto.UpdateInventoryRequestDto;
 import com.muzammil.projects.airBnbApp.service.InventoryService;
@@ -26,7 +27,7 @@ public class InventoryController {
     @PatchMapping("/rooms/{roomId}")
     @Operation(summary = "Update the inventory of a room", tags = {"Admin Inventory"})
     public ResponseEntity<Void> updateInventory(@PathVariable Long roomId,
-                                                @RequestBody UpdateInventoryRequestDto updateInventoryRequestDto) {
+                                                @Valid @RequestBody UpdateInventoryRequestDto updateInventoryRequestDto) {
         inventoryService.updateInventory(roomId, updateInventoryRequestDto);
         return ResponseEntity.noContent().build();
     }

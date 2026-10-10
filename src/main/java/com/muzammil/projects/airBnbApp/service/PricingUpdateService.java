@@ -54,6 +54,11 @@ public class PricingUpdateService {
         }
     }
 
+    /** Recomputes prices + the HotelMinPrice rows of one hotel right away (used when a hotel is activated). */
+    public void refreshHotelPrices(Hotel hotel) {
+        updateHotelPrices(hotel);
+    }
+
     private void updateHotelPrices(Hotel hotel) {
         log.info("Updating hotel prices for hotel ID: {}", hotel.getId());
         LocalDate startDate = LocalDate.now();

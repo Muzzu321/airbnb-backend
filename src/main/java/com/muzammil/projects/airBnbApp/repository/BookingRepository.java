@@ -1,5 +1,7 @@
 package com.muzammil.projects.airBnbApp.repository;
 
+import com.muzammil.projects.airBnbApp.entity.enums.BookingStatus;
+import java.util.Collection;
 import com.muzammil.projects.airBnbApp.entity.Booking;
 import com.muzammil.projects.airBnbApp.entity.Hotel;
 import com.muzammil.projects.airBnbApp.entity.User;
@@ -18,4 +20,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByHotelAndCreatedAtBetween(Hotel hotel, LocalDateTime startDateTime, LocalDateTime endDateTime);
 
     List<Booking> findByUser(User user);
+
+    List<Booking> findByBookingStatusInAndCreatedAtBefore(Collection<BookingStatus> statuses, LocalDateTime before);
+
+    List<Booking> findByBookingStatusAndUpdatedAtBefore(BookingStatus status, LocalDateTime before);
 }

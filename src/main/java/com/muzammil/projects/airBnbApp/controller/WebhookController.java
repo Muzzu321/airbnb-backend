@@ -28,7 +28,8 @@ public class WebhookController {
             bookingService.capturePayment(event);
             return ResponseEntity.noContent().build();
         } catch (SignatureVerificationException e) {
-            throw new RuntimeException(e);
+            // invalid / forged signature: reject, do not touch any booking
+            return ResponseEntity.badRequest().build();
         }
     }
 }

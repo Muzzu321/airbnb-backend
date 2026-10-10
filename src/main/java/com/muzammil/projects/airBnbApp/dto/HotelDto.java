@@ -1,12 +1,15 @@
 package com.muzammil.projects.airBnbApp.dto;
 
 import com.muzammil.projects.airBnbApp.entity.HotelContactInfo;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class HotelDto {
     private Long id;
+    @NotBlank
     private String name;
+    @NotBlank
     private String city;
     private String[] photos;
     private String[] amenities;

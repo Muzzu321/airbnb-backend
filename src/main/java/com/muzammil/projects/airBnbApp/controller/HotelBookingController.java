@@ -1,5 +1,6 @@
 package com.muzammil.projects.airBnbApp.controller;
 
+import jakarta.validation.Valid;
 import com.muzammil.projects.airBnbApp.dto.*;
 import com.muzammil.projects.airBnbApp.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +20,7 @@ public class HotelBookingController {
 
     @PostMapping("/init")
     @Operation(summary = "Initiate the booking", tags = {"Booking Flow"})
-    public ResponseEntity<BookingDto> initialiseBooking(@RequestBody BookingRequest bookingRequest) {
+    public ResponseEntity<BookingDto> initialiseBooking(@Valid @RequestBody BookingRequest bookingRequest) {
         return ResponseEntity.ok(bookingService.initialiseBooking(bookingRequest));
     }
 
