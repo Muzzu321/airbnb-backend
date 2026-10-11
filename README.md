@@ -1,9 +1,9 @@
-# Hotel Booking Platform (airbnb-backend)
+# Full-Stack Hotel Booking Platform
 
-A full-stack hotel / Airbnb-style booking application.
+A full-stack hotel booking application inspired by Airbnb, built with React and Spring Boot.
 
-- **Backend** (repository root): Spring Boot REST API, PostgreSQL, JWT authentication, Stripe Checkout payments.
-- **Frontend** (`frontend/` folder): React single-page app built with Vite.
+- **Backend** (repository root): Java Spring Boot REST API, PostgreSQL, JWT authentication, room inventory management, and Stripe Checkout integration.
+- **Frontend** (`frontend/` folder): React single-page application built with Vite, providing hotel search, booking, authentication, and payment workflows.
 
 > **Documentation status.** This README was written by reading the source code and configuration files. The author of this document could **not** compile the backend, install the frontend packages, start PostgreSQL, or call Stripe while writing it (no network access), so no runtime behaviour was observed. Anything that could not be confirmed from the code is marked **Unverified**. After you have run the project yourself you can delete this note.
 
